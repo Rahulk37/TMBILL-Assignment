@@ -3,8 +3,26 @@ import api from "./api";
 import {
   CreateOrderPayload,
   OrdersResponse,
+  OrderStatus 
 } from "@/types/order";
 
+
+export const updateOrderStatus = async ({
+  id,
+  status,
+}: {
+  id: string;
+  status: OrderStatus;
+}) => {
+  const response = await api.patch(
+    `/orders/${id}/status`,
+    {
+      status,
+    }
+  );
+
+  return response.data;
+};
 export const createOrder = async (
   data: CreateOrderPayload
 ) => {
