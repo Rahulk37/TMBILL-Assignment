@@ -8,25 +8,16 @@ import { useUpdateOrder } from "@/hooks/useUpdateOrder";
 import useOrderStore from "@/store/order.store";
 
 import StatusDropdown from "./StatusDropdown";
+import { OrderStatus } from "@/types/order";
 
 export default function UpdateOrderTable() {
-  const {
-    selectedStore,
-    page,
-    limit,
-  } = useOrderStore();
+  const { selectedStore, page, limit } = useOrderStore();
 
-  const { data } = useOrders(
-    selectedStore,
-    page,
-    limit
-  );
+  const { data } = useOrders(selectedStore, page, limit);
 
   const { mutate } = useUpdateOrder();
 
-  const [statusMap, setStatusMap] = useState<
-    Record<string, string>
-  >({});
+  const [statusMap, setStatusMap] = useState<Record<string, OrderStatus>>({});
 
   return (
     <table>
@@ -45,10 +36,7 @@ export default function UpdateOrderTable() {
 
             <td>
               <StatusDropdown
-                value={
-                  (statusMap[order._id] ||
-                    order.status) as any
-                }
+                value={statusMap[order._id] ?? order.status}
                 onChange={(status) =>
                   setStatusMap((prev) => ({
                     ...prev,
@@ -63,11 +51,7 @@ export default function UpdateOrderTable() {
                 onClick={() =>
                   mutate({
                     id: order._id,
-                    status:
-                      (statusMap[
-                        order._id
-                      ] ||
-                        order.status) as any,
+                    status: statusMap[order._id] ?? order.status,
                   })
                 }
               >
