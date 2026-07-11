@@ -1,0 +1,21 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  max-width: 500px;
+}
+
+.itemRow {
+  display: flex;
+  gap: 10px;
+}
+
+.form input {
+  padding: 10px;
+}
+
+.form button {
+  padding: 10px;
+  cursor: pointer;
+}
