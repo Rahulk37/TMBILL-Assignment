@@ -1,9 +1,8 @@
-const express = require("express");
+import express from "express";
 
 const router = express.Router();
 
 const validate = require("../middleware/validate.middleware");
-
 const orderController = require("../controllers/order.controller");
 
 const {
@@ -11,26 +10,19 @@ const {
   updateStatusSchema,
 } = require("../validators/order.validator");
 
-router.post(
-  "/",
-  validate(createOrderSchema),
-  orderController.createOrder
-);
+router.post("/", validate(createOrderSchema), orderController.createOrder);
 
-router.get(
-  "/",
-  orderController.getOrders
-);
+router.get("/", orderController.getOrders);
+
+router.get("/:store_id/:order_id", orderController.getOrderById);
 
 router.patch(
-  "/:id/status",
+  "/:store_id/:order_id/status",
   validate(updateStatusSchema),
-  orderController.updateOrderStatus
+  orderController.updateOrderStatus,
 );
 
-router.patch(
-  "/:id/delete",
-  orderController.deleteOrder
-);
+router.patch("/:store_id/:order_id/delete", orderController.deleteOrder);
 
-module.exports = router;export {};
+module.exports = router;
+export {};

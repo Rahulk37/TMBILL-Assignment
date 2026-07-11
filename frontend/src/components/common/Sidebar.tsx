@@ -24,8 +24,8 @@ export default function Sidebar() {
       icon: LayoutDashboard,
     },
     {
-      name: "Create Order",
-      href: "/create-order",
+      name: "Stores",
+      href: "/stores",
       icon: PlusCircle,
     },
     {
@@ -34,25 +34,20 @@ export default function Sidebar() {
       icon: ShoppingBag,
     },
     {
-      name: "Update Status",
-      href: "/update-order",
-      icon: RefreshCcw,
-    },
-    {
       name: "Analytics",
       href: "/analytics",
       icon: BarChart3,
     },
-    {
-      name: "Archive",
-      href: "#",
-      icon: Archive,
-    },
-    {
-      name: "Notifications",
-      href: "#",
-      icon: Bell,
-    },
+    // {
+    //   name: "Archive",
+    //   href: "#",
+    //   icon: Archive,
+    // },
+    // {
+    //   name: "Notifications",
+    //   href: "#",
+    //   icon: Bell,
+    // },
   ];
 
   return (

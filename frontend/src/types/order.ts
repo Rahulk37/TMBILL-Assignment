@@ -8,19 +8,38 @@ export interface OrderItem {
   qty: number;
 }
 
-export interface CreateOrderPayload {
-  store_id: string;
-  total_amount: number;
-  items: OrderItem[];
-}
-
 export interface Order {
-  _id: string;
   store_id: string;
-  items: OrderItem[];
+  order_id: string;
+  customer_name: string;
+  total_items: number;
   total_amount: number;
   status: OrderStatus;
-  created_at: string;
+  items: {
+    item_id: string;
+    qty: number;
+  }[];
+}
+
+export interface CreateOrderPayload {
+  store_id: string;
+  order_id?: string;
+  customer_name: string;
+  total_amount: number;
+  items: {
+    item_id: string;
+    qty: number;
+  }[];
+}
+
+export interface UpdateOrderPayload {
+  customer_name?: string;
+  total_amount?: number;
+  status?: OrderStatus;
+  items?: {
+    item_id: string;
+    qty: number;
+  }[];
 }
 
 export interface Pagination {
