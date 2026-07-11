@@ -20,3 +20,6 @@ app.use("/api", routes);
 app.use(errorHandler);
 
 module.exports = app;
+
+// Make this file a TypeScript module
+export {};

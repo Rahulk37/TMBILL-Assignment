@@ -9,4 +9,4 @@ router.post(
   archiveController.archiveOldOrders
 );
 
-module.exports = router;
+module.exports = router;export {};

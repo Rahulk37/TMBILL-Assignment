@@ -1,10 +1,11 @@
-const { Request, Response, NextFunction } = require("express");
+const express = require("express");
+import type { Request, Response, NextFunction } from "express";
 
 const errorHandler = (
   err: Error,
-  req: typeof Request,
-  res: typeof Response,
-  next: typeof NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   console.error(err);
 
@@ -17,3 +18,4 @@ const errorHandler = (
 module.exports = {
   errorHandler,
 };
+export {};

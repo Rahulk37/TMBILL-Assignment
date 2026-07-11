@@ -28,4 +28,4 @@ router.patch(
   orderController.updateOrderStatus
 );
 
-module.exports = router;
+module.exports = router;export {};

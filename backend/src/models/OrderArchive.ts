@@ -50,4 +50,4 @@ const OrderArchiveSchema = new mongoose.Schema(
 module.exports = mongoose.model(
   "OrderArchive",
   OrderArchiveSchema
-);
+);export {};

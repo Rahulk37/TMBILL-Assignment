@@ -36,4 +36,4 @@ const archiveOldOrders = async () => {
 
 module.exports = {
   archiveOldOrders,
-};
+};export {};

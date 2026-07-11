@@ -19,4 +19,4 @@ router.get(
   analyticsController.getTopSellingItems
 );
 
-module.exports = router;
+module.exports = router;export {};
