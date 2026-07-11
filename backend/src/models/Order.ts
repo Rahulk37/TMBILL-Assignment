@@ -34,7 +34,10 @@ const OrderSchema = new mongoose.Schema(
       enum: ["PLACED", "PREPARING", "COMPLETED"],
       default: "PLACED",
     },
-
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
     created_at: {
       type: Date,
       default: Date.now,
@@ -43,7 +46,7 @@ const OrderSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
-  }
+  },
 );
 
 module.exports = mongoose.model("Order", OrderSchema);

@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import Navbar from "@/components/common/Navbar";
+import Sidebar from "@/components/common/Sidebar";
 import QueryProvider from "@/providers/QueryProvider";
 
 export default function RootLayout({
@@ -10,17 +10,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-slate-100">
         <QueryProvider>
-          <Navbar />
+          <div className="flex min-h-screen">
+            {/* Sidebar */}
+            <Sidebar />
 
-          <main
-            style={{
-              padding: "30px",
-            }}
-          >
-            {children}
-          </main>
+            {/* Main Content */}
+            <main className="ml-64 flex-1 p-8">
+              {children}
+            </main>
+          </div>
         </QueryProvider>
       </body>
     </html>

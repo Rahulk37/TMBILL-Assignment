@@ -28,4 +28,9 @@ router.patch(
   orderController.updateOrderStatus
 );
 
+router.patch(
+  "/:id/delete",
+  orderController.deleteOrder
+);
+
 module.exports = router;export {};

@@ -1,11 +1,6 @@
 import api from "./api";
 
-import {
-  CreateOrderPayload,
-  OrdersResponse,
-  OrderStatus 
-} from "@/types/order";
-
+import { CreateOrderPayload, OrdersResponse, OrderStatus } from "@/types/order";
 
 export const updateOrderStatus = async ({
   id,
@@ -14,22 +9,26 @@ export const updateOrderStatus = async ({
   id: string;
   status: OrderStatus;
 }) => {
+  const response = await api.patch(`/orders/${id}/status`, {
+    status,
+  });
+
+  return response.data;
+};
+
+
+export const deleteOrderStatus = async (
+  id: string
+) => {
+  console.log("UpdateOrderTable deleteOrderStatus",id)
   const response = await api.patch(
-    `/orders/${id}/status`,
-    {
-      status,
-    }
+    `/orders/${id}/delete`
   );
 
   return response.data;
 };
-export const createOrder = async (
-  data: CreateOrderPayload
-) => {
-  const response = await api.post(
-    "/orders",
-    data
-  );
+export const createOrder = async (data: CreateOrderPayload) => {
+  const response = await api.post("/orders", data);
 
   return response.data;
 };
@@ -43,16 +42,13 @@ export const getOrders = async ({
   page: number;
   limit: number;
 }): Promise<OrdersResponse> => {
-  const response = await api.get(
-    "/orders",
-    {
-      params: {
-        store_id,
-        page,
-        limit,
-      },
-    }
-  );
+  const response = await api.get("/orders", {
+    params: {
+      store_id,
+      page,
+      limit,
+    },
+  });
 
   return response.data;
 };

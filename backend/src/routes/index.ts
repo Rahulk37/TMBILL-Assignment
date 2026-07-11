@@ -10,12 +10,7 @@ router.use(
   "/analytics",
   analyticsRoutes
 );
-router.get((_: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: "Server running",
-  });
-});
+
 
 router.use("/orders", orderRoutes);
 

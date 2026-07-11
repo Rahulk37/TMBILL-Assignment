@@ -16,8 +16,15 @@ const getOrdersPerDay = async () => {
       },
     },
     {
+      $project: {
+        _id: 0,
+        date: "$_id",
+        totalOrders: 1,
+      },
+    },
+    {
       $sort: {
-        _id: 1,
+        date: 1,
       },
     },
   ]);
@@ -31,6 +38,13 @@ const getRevenuePerStore = async () => {
         totalRevenue: {
           $sum: "$total_amount",
         },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        storeId: "$_id",
+        totalRevenue: 1,
       },
     },
     {
@@ -55,6 +69,13 @@ const getTopSellingItems = async () => {
       },
     },
     {
+      $project: {
+        _id: 0,
+        itemId: "$_id",
+        totalQuantity: 1,
+      },
+    },
+    {
       $sort: {
         totalQuantity: -1,
       },
@@ -69,4 +90,6 @@ module.exports = {
   getOrdersPerDay,
   getRevenuePerStore,
   getTopSellingItems,
-};export {};
+};
+
+export {};
