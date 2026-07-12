@@ -509,20 +509,6 @@ Fields
 
 ---
 
-# Scalability & Performance
-
-- MongoDB Indexing
-- Pagination
-- Store-wise Filtering
-- Aggregation Pipelines
-- React Query Caching
-- Zustand Global State
-- Socket.IO Room-based Communication
-- Soft Delete Strategy
-- Efficient Database Queries
-
----
-
 # Assumptions
 
 - Order status values are:
