@@ -41,8 +41,7 @@ export default function StoreDetailsPage() {
   }
 
   const store = storeData?.data;
-  const orders = orderData?.data ?? [];
-
+const orders = orderData?.data?.orders ?? [];
   const totalRevenue = orders.reduce(
     (sum: number, order: any) => sum + order.total_amount,
     0

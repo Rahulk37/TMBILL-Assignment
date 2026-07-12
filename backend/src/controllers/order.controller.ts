@@ -1,15 +1,21 @@
 import type { Request, Response, NextFunction } from "express";
+
 const orderService = require("../services/order.service");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/response");
 
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const order = await orderService.createOrder(req.body);
 
-    return res.status(201).json({
-      success: true,
-      message: "Order created successfully",
-      data: order,
-    });
+    return successResponse(
+      res,
+      "Order created successfully",
+      order,
+      201,
+    );
   } catch (error) {
     next(error);
   }
@@ -25,12 +31,14 @@ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
       limit: Number(limit),
     });
 
-    return res.status(200).json({
-      success: true,
-      message: "Orders fetched successfully",
-      data: result.orders,
-      pagination: result.pagination,
-    });
+    return successResponse(
+      res,
+      "Orders fetched successfully",
+      {
+        orders: result.orders,
+        pagination: result.pagination,
+      },
+    );
   } catch (error) {
     next(error);
   }
@@ -47,17 +55,14 @@ const getOrderById = async (
     const order = await orderService.getOrderById(store_id, order_id);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return errorResponse(res, "Order not found", 404);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Order fetched successfully",
-      data: order,
-    });
+    return successResponse(
+      res,
+      "Order fetched successfully",
+      order,
+    );
   } catch (error) {
     next(error);
   }
@@ -79,40 +84,38 @@ const updateOrderStatus = async (
     );
 
     if (!updatedOrder) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return errorResponse(res, "Order not found", 404);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Order status updated successfully",
-      data: updatedOrder,
-    });
+    return successResponse(
+      res,
+      "Order status updated successfully",
+      updatedOrder,
+    );
   } catch (error) {
     next(error);
   }
 };
 
-const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+const deleteOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { store_id, order_id } = req.params;
 
     const order = await orderService.deleteOrder(store_id, order_id);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
+      return errorResponse(res, "Order not found", 404);
     }
 
-    return res.status(200).json({
-      success: true,
-      message: "Order deleted successfully",
-      data: order,
-    });
+    return successResponse(
+      res,
+      "Order deleted successfully",
+      order,
+    );
   } catch (error) {
     next(error);
   }

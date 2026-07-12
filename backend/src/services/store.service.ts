@@ -15,7 +15,7 @@ const generateStoreId = async () => {
 };
 
 const createStore = async (storeData: any) => {
-  // Check if the frontend store_id already exists
+
   if (storeData.store_id) {
     const existingStore = await Store.findOne({
       store_id: storeData.store_id,
@@ -27,7 +27,7 @@ const createStore = async (storeData: any) => {
     }
   }
 
-  // Generate a new random store_id
+
   const newStoreId = await generateStoreId();
 
   const store = await Store.create({

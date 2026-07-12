@@ -40,9 +40,9 @@ export default function StoreOrdersPage() {
   const { mutate: deleteOrder } = useDeleteOrder();
   const { mutate: updateStatus } = useUpdateOrderStatus();
 
-  const orders = data?.data || [];
-  const totalPages = data?.pagination?.totalPages || 1;
-  const totalOrders = data?.data?.length || 0;
+  const orders = data?.data?.orders ?? [];
+  const totalPages = data?.data?.pagination.totalPages || 1;
+  const totalOrders = data?.data?.orders?.length || 0;
   // Filter orders based on search and status
   const filteredOrders = orders.filter((order: any) => {
     const matchesSearch =
@@ -302,28 +302,33 @@ export default function StoreOrdersPage() {
                         </p>
                       </td>
                       <td className="p-4">
-                        <select
-                          value={order.status}
-                          onChange={(e) => {
-                            if (
-                              confirm(
-                                `Update order #${order.order_id} status to ${e.target.value}?`,
-                              )
-                            ) {
-                              updateStatus({
-                                store_id,
-                                order_id: order.order_id,
-                                status: e.target.value as any,
-                              });
-                            }
-                          }}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border-0 cursor-pointer transition-colors ${getStatusColor(order.status)}`}
+                        <div
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${getStatusColor(order.status)}`}
                         >
                           {getStatusIcon(order.status)}
-                          <option value="PLACED">PLACED</option>
-                          <option value="PREPARING">PREPARING</option>
-                          <option value="COMPLETED">COMPLETED</option>
-                        </select>
+
+                          <select
+                            value={order.status}
+                            onChange={(e) => {
+                              if (
+                                confirm(
+                                  `Update order #${order.order_id} status to ${e.target.value}?`,
+                                )
+                              ) {
+                                updateStatus({
+                                  store_id,
+                                  order_id: order.order_id,
+                                  status: e.target.value as any,
+                                });
+                              }
+                            }}
+                            className="bg-transparent border-none outline-none text-xs font-semibold cursor-pointer"
+                          >
+                            <option value="PLACED">PLACED</option>
+                            <option value="PREPARING">PREPARING</option>
+                            <option value="COMPLETED">COMPLETED</option>
+                          </select>
+                        </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center justify-center gap-2">

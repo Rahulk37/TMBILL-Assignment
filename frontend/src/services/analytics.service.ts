@@ -1,4 +1,4 @@
-import { OrdersResponse } from "@/types/order";
+import { ArchiveOrdersResponse, OrdersResponse } from "@/types/order";
 import api from "./api";
 
 export const getOrdersPerDay = async () => {
@@ -41,7 +41,7 @@ export const useArchiveOrdersApi = async ({
   store_id: string;
   page: number;
   limit: number;
-}): Promise<OrdersResponse> => {
+}): Promise<ArchiveOrdersResponse> => {
   const response = await api.get("/analytics", {
     params: {
       store_id,

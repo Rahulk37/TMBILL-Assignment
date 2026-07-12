@@ -16,13 +16,11 @@ const initializeSocket = (server: HttpServer): Server => {
   io.on("connection", (socket: Socket) => {
     console.log(`Client Connected: ${socket.id}`);
 
-    // Join Store Room
     socket.on("join-store", (storeId: string) => {
       socket.join(storeId);
       console.log(`${socket.id} joined ${storeId}`);
     });
 
-    // Leave Store Room
     socket.on("leave-store", (storeId: string) => {
       socket.leave(storeId);
       console.log(`${socket.id} left ${storeId}`);

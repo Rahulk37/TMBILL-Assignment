@@ -24,9 +24,10 @@ export default function DashboardPage() {
     page: 1,
     limit: 100,
   });
+console.log("DashboardPage",stores,orders)
+const allStores = stores?.data?.stores ?? [];
+const allOrders = orders?.data?.orders ?? [];
 
-  const allStores = stores?.data?.stores ?? [];
-  const allOrders = orders?.data ?? [];
 
   const totalRevenue = allOrders.reduce(
     (sum: number, order: any) => sum + order.total_amount,

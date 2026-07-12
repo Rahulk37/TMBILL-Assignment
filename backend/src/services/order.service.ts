@@ -26,7 +26,7 @@ const generateOrderId = async (store_id: string) => {
 };
 
 const createOrder = async (orderData: any) => {
-  // Check store exists
+
   const store = await Store.findOne({
     store_id: orderData.store_id,
     deleted: false,
@@ -36,7 +36,6 @@ const createOrder = async (orderData: any) => {
     throw new Error("Store not found");
   }
 
-  // If order_id is provided, verify uniqueness
   if (orderData.order_id) {
     const existingOrder = await Order.findOne({
       store_id: orderData.store_id,
@@ -48,11 +47,10 @@ const createOrder = async (orderData: any) => {
       throw new Error("Order ID already exists for this store");
     }
   } else {
-    // Generate unique order_id for this store
+
     orderData.order_id = await generateOrderId(orderData.store_id);
   }
 
-  // Calculate total unique items
   orderData.total_items = orderData.items.length;
 
   const order = await Order.create(orderData);
@@ -86,7 +84,7 @@ const getOrders = async ({
       },
       {
         $lookup: {
-          from: "stores", // MongoDB collection name
+          from: "stores", 
           localField: "store_id",
           foreignField: "store_id",
           as: "store",

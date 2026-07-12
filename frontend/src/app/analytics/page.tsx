@@ -12,7 +12,7 @@ import {
   TrendingUp,
   Package,
   Clock,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import ArchiveButton from "@/components/analytics/ArchiveButton";
 import DashboardCards from "@/components/dashboard/DashboardCards";
@@ -34,19 +34,19 @@ export default function AnalyticsPage() {
     limit,
   });
 
-  const orders = data?.data || [];
-  
+  const orders = data?.data?.orders ?? [];
+
   // Calculate analytics from orders data
   const totalRevenue = orders.reduce(
     (sum: number, order: any) => sum + order.total_amount,
-    0
+    0,
   );
-  
+
   const totalOrders = orders.length;
-  
+
   // Unique stores from orders
   const uniqueStores = [...new Set(orders.map((o: any) => o.store_id))];
-  
+
   // Order status counts
   const placed = orders.filter((o: any) => o.status === "PLACED").length;
   const preparing = orders.filter((o: any) => o.status === "PREPARING").length;
@@ -55,7 +55,7 @@ export default function AnalyticsPage() {
   // Calculate items sold
   const itemsSold = orders.reduce(
     (sum: number, order: any) => sum + (order.total_items || 0),
-    0
+    0,
   );
 
   return (
@@ -118,8 +118,12 @@ export default function AnalyticsPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Orders</p>
-                <p className="mt-1 text-2xl font-bold text-slate-800">{totalOrders}</p>
+                <p className="text-sm font-medium text-slate-500">
+                  Total Orders
+                </p>
+                <p className="mt-1 text-2xl font-bold text-slate-800">
+                  {totalOrders}
+                </p>
               </div>
               <div className="rounded-xl bg-blue-50 p-3">
                 <ShoppingBag className="w-5 h-5 text-blue-600" />
@@ -129,8 +133,12 @@ export default function AnalyticsPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Revenue</p>
-                <p className="mt-1 text-2xl font-bold text-emerald-600">₹{totalRevenue.toLocaleString()}</p>
+                <p className="text-sm font-medium text-slate-500">
+                  Total Revenue
+                </p>
+                <p className="mt-1 text-2xl font-bold text-emerald-600">
+                  ₹{totalRevenue.toLocaleString()}
+                </p>
               </div>
               <div className="rounded-xl bg-emerald-50 p-3">
                 <IndianRupee className="w-5 h-5 text-emerald-600" />
@@ -140,8 +148,12 @@ export default function AnalyticsPage() {
           <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Active Stores</p>
-                <p className="mt-1 text-2xl font-bold text-slate-800">{uniqueStores.length}</p>
+                <p className="text-sm font-medium text-slate-500">
+                  Active Stores
+                </p>
+                <p className="mt-1 text-2xl font-bold text-slate-800">
+                  {uniqueStores.length}
+                </p>
               </div>
               <div className="rounded-xl bg-purple-50 p-3">
                 <Store className="w-5 h-5 text-purple-600" />
@@ -152,7 +164,9 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-500">Items Sold</p>
-                <p className="mt-1 text-2xl font-bold text-slate-800">{itemsSold}</p>
+                <p className="mt-1 text-2xl font-bold text-slate-800">
+                  {itemsSold}
+                </p>
               </div>
               <div className="rounded-xl bg-orange-50 p-3">
                 <Trophy className="w-5 h-5 text-orange-600" />
@@ -167,7 +181,9 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Package className="w-5 h-5 text-blue-500" />
-                <span className="text-sm font-medium text-slate-600">Placed</span>
+                <span className="text-sm font-medium text-slate-600">
+                  Placed
+                </span>
               </div>
               <span className="text-xl font-bold text-slate-800">{placed}</span>
             </div>
@@ -176,18 +192,26 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 text-yellow-500" />
-                <span className="text-sm font-medium text-slate-600">Preparing</span>
+                <span className="text-sm font-medium text-slate-600">
+                  Preparing
+                </span>
               </div>
-              <span className="text-xl font-bold text-slate-800">{preparing}</span>
+              <span className="text-xl font-bold text-slate-800">
+                {preparing}
+              </span>
             </div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border-l-4 border-green-500">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500" />
-                <span className="text-sm font-medium text-slate-600">Completed</span>
+                <span className="text-sm font-medium text-slate-600">
+                  Completed
+                </span>
               </div>
-              <span className="text-xl font-bold text-slate-800">{completed}</span>
+              <span className="text-xl font-bold text-slate-800">
+                {completed}
+              </span>
             </div>
           </div>
         </div>

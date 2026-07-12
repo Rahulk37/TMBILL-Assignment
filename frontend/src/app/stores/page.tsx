@@ -116,7 +116,7 @@ export default function StoresPage() {
                 <p className="text-sm font-medium text-slate-500">
                   Total Orders
                 </p>
-                <p className="mt-2 text-3xl font-bold text-slate-800">{orderData?.data?.length ?? 0}</p>
+                <p className="mt-2 text-3xl font-bold text-slate-800">{orderData?.data?.orders?.length ?? 0}</p>
               </div>
               <div className="rounded-xl bg-purple-50 p-3">
                 <Package className="w-6 h-6 text-purple-600" />

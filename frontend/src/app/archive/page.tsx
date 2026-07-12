@@ -36,16 +36,14 @@ export default function ArchiveOrdersPage() {
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
-  const { data, isLoading } = useArchiveOrders({
-    store_id: "",
-    page: 1,
-    limit: 100,
-  });
-
-
-
-  const orders = data?.data || [];
-  const pagination = data?.pagination;
+const { data, isLoading } = useArchiveOrders({
+  store_id: "",
+  page: 1,
+  limit: 100,
+});
+console.log("ArchiveOrdersPage",data)
+const orders = data?.data?.archivedOrders ?? [];
+const pagination = data?.data?.pagination;
 
   // Create store map from archived data
   const storeMap = new Map<string, string>();

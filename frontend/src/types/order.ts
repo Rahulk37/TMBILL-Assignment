@@ -55,6 +55,17 @@ export interface Pagination {
 export interface OrdersResponse {
   success: boolean;
   message: string;
-  data: Order[];
-  pagination: Pagination;
+  data: {
+    orders: Order[];
+    pagination: Pagination;
+  };
+}
+
+export interface ArchiveOrdersResponse {
+  success: boolean;
+  message: string;
+  data: {
+    archivedOrders: Order[];
+    pagination: Pagination;
+  };
 }

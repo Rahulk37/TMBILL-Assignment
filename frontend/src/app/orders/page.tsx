@@ -43,8 +43,8 @@ export default function OrdersPage() {
   const { mutate: deleteOrder } = useDeleteOrder();
   const { mutate: updateStatus } = useUpdateOrderStatus();
 
-  const orders = data?.data || [];
-  const pagination = data?.pagination;
+const orders = data?.data?.orders ?? [];
+const pagination = data?.data?.pagination;
   console.log("orders", orders);
   // Unique Stores
 

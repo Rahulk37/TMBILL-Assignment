@@ -8,7 +8,7 @@ const { seedStores } = require("./utils/seed");
 const startServer = async () => {
   try {
     await connectDatabase();
-  await seedStores();
+    await seedStores();
     const server = http.createServer(app);
 
     initializeSocket(server);

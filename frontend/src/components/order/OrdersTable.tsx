@@ -81,8 +81,8 @@ export default function OrdersTable() {
           </thead>
 
           <tbody className="divide-y divide-slate-100">
-            {data?.data.length ? (
-              data.data.map((order: Order) => (
+            {data?.data?.orders?.length ? (
+              data?.data?.orders?.map((order: Order) => (
                 <tr key={order._id} className="hover:bg-slate-50 transition">
                   <td className="px-6 py-5 font-medium text-slate-800">
                     {order.store_id}
@@ -126,7 +126,7 @@ export default function OrdersTable() {
       {/* Pagination */}
 
       <div className="flex items-center justify-end border-t bg-slate-50 px-6 py-4">
-        <Pagination totalPages={data?.pagination.totalPages ?? 0} />
+        <Pagination totalPages={data?.data?.pagination.totalPages ?? 0} />
       </div>
     </div>
   );
