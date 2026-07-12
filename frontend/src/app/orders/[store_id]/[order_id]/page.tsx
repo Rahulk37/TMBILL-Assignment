@@ -196,6 +196,7 @@ export default function OrderDetailsPage() {
                 <tr>
                   <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">#</th>
                   <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Item ID</th>
+                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Item Name</th>
                   <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Quantity</th>
                   <th className="p-4 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Subtotal</th>
                 </tr>
@@ -212,6 +213,12 @@ export default function OrderDetailsPage() {
                       <div className="flex items-center gap-2">
                         <Package className="w-4 h-4 text-slate-400" />
                         <p className="font-medium text-slate-800">{item.item_id}</p>
+                      </div>
+                    </td>
+                     <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Package className="w-4 h-4 text-slate-400" />
+                        <p className="font-medium text-slate-800">{item.item_name}</p>
                       </div>
                     </td>
                     <td className="p-4">

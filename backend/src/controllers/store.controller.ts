@@ -2,11 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 
 const storeService = require("../services/store.service");
 
-const createStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const createStore = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const store = await storeService.createStore(req.body);
 
@@ -20,11 +16,7 @@ const createStore = async (
   }
 };
 
-const getStores = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getStores = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const stores = await storeService.getStores();
 
@@ -41,7 +33,7 @@ const getStores = async (
 const getStoreById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const store = await storeService.getStoreById(req.params.store_id);
@@ -63,16 +55,9 @@ const getStoreById = async (
   }
 };
 
-const updateStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updateStore = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const store = await storeService.updateStore(
-      req.params.store_id,
-      req.body
-    );
+    const store = await storeService.updateStore(req.params.store_id, req.body);
 
     if (!store) {
       return res.status(404).json({
@@ -91,11 +76,7 @@ const updateStore = async (
   }
 };
 
-const deleteStore = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const deleteStore = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const store = await storeService.deleteStore(req.params.store_id);
 

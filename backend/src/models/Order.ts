@@ -38,7 +38,10 @@ const OrderSchema = new mongoose.Schema(
           type: String,
           required: true,
         },
-
+        item_name: {
+          type: String,
+          required: true,
+        },
         qty: {
           type: Number,
           required: true,
@@ -72,7 +75,7 @@ const OrderSchema = new mongoose.Schema(
       updatedAt: "updated_at",
     },
     versionKey: false,
-  }
+  },
 );
 
 module.exports = mongoose.model("Order", OrderSchema);

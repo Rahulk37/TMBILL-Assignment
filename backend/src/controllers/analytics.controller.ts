@@ -1,10 +1,13 @@
 const analyticsService = require("../services/analytics.service");
 import type { Request, Response, NextFunction } from "express";
 
-const getOrdersPerDay = async (req: Request, res: Response, next: NextFunction) => {
+const getOrdersPerDay = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const data =
-      await analyticsService.getOrdersPerDay();
+    const data = await analyticsService.getOrdersPerDay();
 
     return res.status(200).json({
       success: true,
@@ -18,11 +21,10 @@ const getOrdersPerDay = async (req: Request, res: Response, next: NextFunction) 
 const getRevenuePerStore = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const data =
-      await analyticsService.getRevenuePerStore();
+    const data = await analyticsService.getRevenuePerStore();
 
     return res.status(200).json({
       success: true,
@@ -36,11 +38,10 @@ const getRevenuePerStore = async (
 const getTopSellingItems = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const data =
-      await analyticsService.getTopSellingItems();
+    const data = await analyticsService.getTopSellingItems();
 
     return res.status(200).json({
       success: true,

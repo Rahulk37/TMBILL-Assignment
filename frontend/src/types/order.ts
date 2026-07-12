@@ -2,6 +2,7 @@ export type OrderStatus = "PLACED" | "PREPARING" | "COMPLETED";
 
 export interface OrderItem {
   item_id: string;
+  item_name: string;
   qty: number;
 }
 

@@ -41,7 +41,7 @@ export default function TopItemsTable() {
   }
 
   const tableData = data?.data || [];
-
+console.log("tableData1",tableData)
   return (
     <div className="rounded-2xl bg-white shadow-sm border border-slate-100 overflow-hidden">
       <div className="border-b border-slate-100 px-6 py-4">
@@ -69,6 +69,9 @@ export default function TopItemsTable() {
               <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Item ID
               </th>
+               <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Item Name
+              </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Quantity Sold
               </th>
@@ -78,7 +81,7 @@ export default function TopItemsTable() {
             {tableData.length > 0 ? (
               tableData.map(
                 (
-                  item: { itemId: string; totalQuantity: number },
+                  item: { itemId: string; totalQuantity: number ,itemName:string},
                   index: number
                 ) => (
                   <tr key={index} className="hover:bg-slate-50/50 transition-colors group">
@@ -91,6 +94,12 @@ export default function TopItemsTable() {
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium">
                         <Package className="w-4 h-4 text-slate-400" />
                         {item.itemId}
+                      </span>
+                    </td>
+                     <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium">
+                        <Package className="w-4 h-4 text-slate-400" />
+                        {item.itemName}
                       </span>
                     </td>
                     <td className="px-6 py-4">

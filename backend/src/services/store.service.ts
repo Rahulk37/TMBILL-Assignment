@@ -38,16 +38,13 @@ const createStore = async (storeData: any) => {
   return store;
 };
 
-
-const getStores = async (
-  {
-    page = 1,
-    limit = 10,
-  }: {
-    page?: number;
-    limit?: number;
-  } = {}
-) => {
+const getStores = async ({
+  page = 1,
+  limit = 10,
+}: {
+  page?: number;
+  limit?: number;
+} = {}) => {
   const filter = {
     deleted: false,
   };
@@ -55,10 +52,7 @@ const getStores = async (
   const skip = (page - 1) * limit;
 
   const [stores, totalRecords] = await Promise.all([
-    Store.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit),
+    Store.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
 
     Store.countDocuments(filter),
   ]);
@@ -81,10 +75,7 @@ const getStoreById = async (store_id: string) => {
   });
 };
 
-const updateStore = async (
-  store_id: string,
-  storeData: any
-) => {
+const updateStore = async (store_id: string, storeData: any) => {
   return await Store.findOneAndUpdate(
     {
       store_id,
@@ -94,7 +85,7 @@ const updateStore = async (
     {
       new: true,
       runValidators: true,
-    }
+    },
   );
 };
 
@@ -109,7 +100,7 @@ const deleteStore = async (store_id: string) => {
     },
     {
       new: true,
-    }
+    },
   );
 };
 

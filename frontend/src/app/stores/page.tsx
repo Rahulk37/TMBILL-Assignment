@@ -16,6 +16,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { useState } from "react";
+import { useOrders } from "@/hooks/order/useOrder";
 
 export default function StoresPage() {
   const router = useRouter();
@@ -28,7 +29,14 @@ export default function StoresPage() {
 
   const totalPages = Math.ceil((data?.data?.total || 0) / limit);
   const stores = data?.data?.stores || [];
-  console.log("StoresPage", data);
+
+   const { data: orderData } = useOrders({
+  store_id: "",
+  page,
+  limit,
+});
+
+  console.log("orderData21", orderData);
   // Filter stores based on search
   const filteredStores = stores.filter(
     (store: any) =>
@@ -108,7 +116,7 @@ export default function StoresPage() {
                 <p className="text-sm font-medium text-slate-500">
                   Total Orders
                 </p>
-                <p className="mt-2 text-3xl font-bold text-slate-800">--</p>
+                <p className="mt-2 text-3xl font-bold text-slate-800">{orderData?.data.length ?? 0}</p>
               </div>
               <div className="rounded-xl bg-purple-50 p-3">
                 <Package className="w-6 h-6 text-purple-600" />

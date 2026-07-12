@@ -2,23 +2,19 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  CreateOrderPayload,
-  OrderItem,
-  OrderStatus,
-} from "@/types/order";
+import { CreateOrderPayload, OrderItem, OrderStatus } from "@/types/order";
 import { useCreateOrder } from "@/hooks/order/useOrder";
-import { 
-  ArrowLeft, 
-  Plus, 
-  Trash2, 
-  ShoppingBag, 
-  User, 
+import {
+  ArrowLeft,
+  Plus,
+  Trash2,
+  ShoppingBag,
+  User,
   DollarSign,
   Package,
   X,
   Check,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 
 export default function OrdersPage() {
@@ -34,6 +30,7 @@ export default function OrdersPage() {
   const [items, setItems] = useState<OrderItem[]>([
     {
       item_id: "",
+      item_name: "",
       qty: 1,
     },
   ]);
@@ -41,7 +38,7 @@ export default function OrdersPage() {
   const handleItemChange = (
     index: number,
     field: keyof OrderItem,
-    value: string | number
+    value: string | number,
   ) => {
     const updated = [...items];
     updated[index] = {
@@ -52,9 +49,15 @@ export default function OrdersPage() {
   };
 
   const addItem = () => {
-    setItems((prev) => [...prev, { item_id: "", qty: 1 }]);
+    setItems((prev) => [
+      ...prev,
+      {
+        item_id: "",
+        item_name: "",
+        qty: 1,
+      },
+    ]);
   };
-
   const removeItem = (index: number) => {
     setItems((prev) => prev.filter((_, i) => i !== index));
   };
@@ -64,8 +67,8 @@ export default function OrdersPage() {
       alert("Please enter customer name");
       return;
     }
-    if (items.some(item => !item.item_id.trim())) {
-      alert("Please fill in all item IDs");
+    if (items.some((item) => !item.item_id.trim() || !item.item_name.trim())) {
+      alert("Please fill in all item IDs and Item Names");
       return;
     }
     if (totalAmount <= 0) {
@@ -101,21 +104,31 @@ export default function OrdersPage() {
               <ArrowLeft className="w-5 h-5 text-slate-600" />
             </button>
             <div>
-              <h1 className="text-3xl font-bold text-slate-800">Create New Order</h1>
+              <h1 className="text-3xl font-bold text-slate-800">
+                Create New Order
+              </h1>
               <p className="text-slate-500 mt-1">Store ID: {store_id}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
-              status === "COMPLETED" ? "bg-green-100 text-green-700" :
-              status === "PREPARING" ? "bg-yellow-100 text-yellow-700" :
-              "bg-blue-100 text-blue-700"
-            }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${
-                status === "COMPLETED" ? "bg-green-500" :
-                status === "PREPARING" ? "bg-yellow-500" :
-                "bg-blue-500"
-              }`} />
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
+                status === "COMPLETED"
+                  ? "bg-green-100 text-green-700"
+                  : status === "PREPARING"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-blue-100 text-blue-700"
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  status === "COMPLETED"
+                    ? "bg-green-500"
+                    : status === "PREPARING"
+                      ? "bg-yellow-500"
+                      : "bg-blue-500"
+                }`}
+              />
               {status}
             </span>
           </div>
@@ -124,8 +137,12 @@ export default function OrdersPage() {
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100">
-            <h2 className="text-lg font-semibold text-slate-800">Order Details</h2>
-            <p className="text-sm text-slate-500">Enter the order information below</p>
+            <h2 className="text-lg font-semibold text-slate-800">
+              Order Details
+            </h2>
+            <p className="text-sm text-slate-500">
+              Enter the order information below
+            </p>
           </div>
 
           <div className="p-6 space-y-6">
@@ -183,16 +200,19 @@ export default function OrdersPage() {
                   <ShoppingBag className="w-4 h-4 inline mr-1.5" />
                   Order Items
                 </label>
-                <span className="text-sm text-slate-500">{items.length} item(s)</span>
+                <span className="text-sm text-slate-500">
+                  {items.length} item(s)
+                </span>
               </div>
 
               <div className="space-y-3">
                 {items.map((item, index) => (
                   <div
                     key={index}
-                    className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors"
+                    className="grid grid-cols-1 md:grid-cols-12 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors"
                   >
-                    <div className="flex-1 w-full">
+                    {/* Item ID */}
+                    <div className="md:col-span-3">
                       <input
                         placeholder="Item ID"
                         value={item.item_id}
@@ -203,18 +223,37 @@ export default function OrdersPage() {
                       />
                     </div>
 
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
-                      <div className="flex-1 sm:w-24">
-                        <input
-                          type="number"
-                          min="1"
-                          value={item.qty}
-                          onChange={(e) =>
-                            handleItemChange(index, "qty", Number(e.target.value))
-                          }
-                          className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white"
-                        />
-                      </div>
+                    {/* Item Name */}
+                    <div className="md:col-span-5">
+                      <input
+                        placeholder="Item Name"
+                        value={item.item_name}
+                        onChange={(e) =>
+                          handleItemChange(index, "item_name", e.target.value)
+                        }
+                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white"
+                      />
+                    </div>
+
+                    {/* Quantity */}
+                    <div className="md:col-span-2">
+                      <input
+                        type="number"
+                        min="1"
+                        placeholder="Qty"
+                        value={item.qty}
+                        onChange={(e) =>
+                          handleItemChange(index, "qty", Number(e.target.value))
+                        }
+                        className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white"
+                      />
+                    </div>
+
+                    {/* Actions */}
+                    <div className="md:col-span-2 flex items-center justify-between">
+                      <span className="text-xs font-medium text-slate-400">
+                        #{index + 1}
+                      </span>
 
                       <button
                         type="button"
@@ -225,10 +264,6 @@ export default function OrdersPage() {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-
-                    <span className="text-xs font-medium text-slate-400 hidden sm:block">
-                      #{index + 1}
-                    </span>
                   </div>
                 ))}
               </div>
@@ -244,18 +279,23 @@ export default function OrdersPage() {
             </div>
 
             {/* Preview Section */}
-            {customerName || totalAmount > 0 || items.some(i => i.item_id) ? (
+            {customerName || totalAmount > 0 || items.some((i) => i.item_id) ? (
               <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
-                <h3 className="text-sm font-semibold text-slate-700 mb-2">Order Preview</h3>
+                <h3 className="text-sm font-semibold text-slate-700 mb-2">
+                  Order Preview
+                </h3>
                 <div className="space-y-1 text-sm">
                   <p className="text-slate-600">
-                    <span className="font-medium">Customer:</span> {customerName || "—"}
+                    <span className="font-medium">Customer:</span>{" "}
+                    {customerName || "—"}
                   </p>
                   <p className="text-slate-600">
-                    <span className="font-medium">Total:</span> ₹{totalAmount || 0}
+                    <span className="font-medium">Total:</span> ₹
+                    {totalAmount || 0}
                   </p>
                   <p className="text-slate-600">
-                    <span className="font-medium">Items:</span> {items.filter(i => i.item_id).length} item(s)
+                    <span className="font-medium">Items:</span>{" "}
+                    {items.filter((i) => i.item_id).length} item(s)
                   </p>
                 </div>
               </div>
@@ -291,8 +331,6 @@ export default function OrdersPage() {
             </div>
           </div>
         </div>
-
-        
       </div>
     </div>
   );

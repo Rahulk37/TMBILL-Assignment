@@ -3,6 +3,11 @@ const Order = require("../models/Order");
 const getOrdersPerDay = async () => {
   return await Order.aggregate([
     {
+      $match: {
+        deleted: false,
+      },
+    },
+    {
       $group: {
         _id: {
           $dateToString: {
@@ -64,7 +69,7 @@ const getRevenuePerStore = async () => {
         _id: 0,
         storeId: "$_id",
         storeName: "$store.name",
-        storeAddress: "$store.address", // Optional
+        storeAddress: "$store.address",
         totalRevenue: 1,
       },
     },
@@ -79,11 +84,19 @@ const getRevenuePerStore = async () => {
 const getTopSellingItems = async () => {
   return await Order.aggregate([
     {
+      $match: {
+        deleted: false,
+      },
+    },
+    {
       $unwind: "$items",
     },
     {
       $group: {
         _id: "$items.item_id",
+        itemName: {
+          $first: "$items.item_name",
+        },
         totalQuantity: {
           $sum: "$items.qty",
         },
@@ -93,6 +106,7 @@ const getTopSellingItems = async () => {
       $project: {
         _id: 0,
         itemId: "$_id",
+        itemName: 1,
         totalQuantity: 1,
       },
     },
