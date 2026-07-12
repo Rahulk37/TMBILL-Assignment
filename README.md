@@ -244,7 +244,23 @@ Stop Containers
 ```bash
 docker compose down
 ```
+Create Frontend `.env.docker`
 
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+
+NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+```
+
+Create Backend `.env.docker`
+
+```env
+PORT=5000
+
+MONGODB_URI=mongodb://mongodb:27017/order_management
+
+CLIENT_URL=http://localhost:3000
+```
 ---
 
 # API Documentation
