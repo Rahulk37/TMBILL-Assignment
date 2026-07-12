@@ -48,15 +48,15 @@ export default function OrdersPage() {
   console.log("orders", orders);
   // Unique Stores
 
-const storeMap = new Map<string, string>();
+  const storeMap = new Map<string, string>();
 
-orders.forEach((order) => {
-  if (!storeMap.has(order.store_id)) {
-    storeMap.set(order.store_id, order.store_name);
-  }
-});
+  orders.forEach((order) => {
+    if (!storeMap.has(order.store_id)) {
+      storeMap.set(order.store_id, order.store_name);
+    }
+  });
 
-const stores = Array.from(storeMap.entries());
+  const stores = Array.from(storeMap.entries());
   // Filter Orders
   const filteredOrders = useMemo(() => {
     return orders.filter((order: any) => {
@@ -207,19 +207,19 @@ const stores = Array.from(storeMap.entries());
               />
             </div>
             <div className="flex gap-2">
-             <select
-  value={selectedStore}
-  onChange={(e) => setSelectedStore(e.target.value)}
-  className="px-4 py-3 rounded-lg border border-slate-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all min-w-[160px]"
->
-  <option value="">All Stores</option>
+              <select
+                value={selectedStore}
+                onChange={(e) => setSelectedStore(e.target.value)}
+                className="px-4 py-3 rounded-lg border border-slate-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all min-w-[160px]"
+              >
+                <option value="">All Stores</option>
 
-  {stores.map(([storeId, storeName]) => (
-    <option key={storeId} value={storeId}>
-      {storeName}
-    </option>
-  ))}
-</select>
+                {stores.map(([storeId, storeName]) => (
+                  <option key={storeId} value={storeId}>
+                    {storeName}
+                  </option>
+                ))}
+              </select>
               {selectedStore && (
                 <button
                   onClick={() => setSelectedStore("")}
@@ -299,43 +299,31 @@ const stores = Array.from(storeMap.entries());
                         </p>
                       </td>
                       <td className="p-4">
-                        <select
-                          value={order.status}
-                          onChange={(e) => {
-                            if (
-                              confirm(
-                                `Update order #${order.order_id} status to ${e.target.value}?`,
-                              )
-                            ) {
-                              updateStatus({
-                                store_id: order.store_id,
-                                order_id: order.order_id,
-                                status: e.target.value as any,
-                              });
-                            }
-                          }}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border-0 cursor-pointer transition-colors ${getStatusColor(order.status)}`}
-                        >
+                        <div className="flex items-center gap-2">
                           {getStatusIcon(order.status)}
-                          <option
-                            value="PLACED"
-                            className="bg-blue-100 text-blue-700"
+
+                          <select
+                            value={order.status}
+                            onChange={(e) => {
+                              if (
+                                confirm(
+                                  `Update order #${order.order_id} status to ${e.target.value}?`,
+                                )
+                              ) {
+                                updateStatus({
+                                  store_id: order.store_id,
+                                  order_id: order.order_id,
+                                  status: e.target.value as any,
+                                });
+                              }
+                            }}
+                            className={`px-3 py-1.5 rounded-full text-xs font-semibold border-0 cursor-pointer transition-colors ${getStatusColor(order.status)}`}
                           >
-                            PLACED
-                          </option>
-                          <option
-                            value="PREPARING"
-                            className="bg-yellow-100 text-yellow-700"
-                          >
-                            PREPARING
-                          </option>
-                          <option
-                            value="COMPLETED"
-                            className="bg-green-100 text-green-700"
-                          >
-                            COMPLETED
-                          </option>
-                        </select>
+                            <option value="PLACED">PLACED</option>
+                            <option value="PREPARING">PREPARING</option>
+                            <option value="COMPLETED">COMPLETED</option>
+                          </select>
+                        </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center justify-center gap-2">

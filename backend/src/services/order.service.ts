@@ -57,7 +57,9 @@ const createOrder = async (orderData: any) => {
 
   const order = await Order.create(orderData);
 
-  getIO().to(order.store_id).emit("order-created", order);
+ console.log("Emitting order-created", order.store_id);
+
+getIO().to(order.store_id).emit("order-created", order);
 
   return order;
 };

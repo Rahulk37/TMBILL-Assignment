@@ -2,14 +2,18 @@
 
 import { useParams, useRouter } from "next/navigation";
 import useOrderStore from "@/store/order.store";
-import { useDeleteOrder, useOrders, useUpdateOrderStatus } from "@/hooks/order/useOrder";
-import { 
-  ArrowLeft, 
-  Plus, 
-  ShoppingBag, 
-  Package, 
-  Eye, 
-  Edit, 
+import {
+  useDeleteOrder,
+  useOrders,
+  useUpdateOrderStatus,
+} from "@/hooks/order/useOrder";
+import {
+  ArrowLeft,
+  Plus,
+  ShoppingBag,
+  Package,
+  Eye,
+  Edit,
   Trash2,
   ChevronLeft,
   ChevronRight,
@@ -17,48 +21,88 @@ import {
   Clock,
   AlertCircle,
   Search,
-  Filter
+  Filter,
 } from "lucide-react";
 import { useState } from "react";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import socket from "@/lib/socket";
 
 export default function StoreOrdersPage() {
   const router = useRouter();
   const { store_id } = useParams<{ store_id: string }>();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
-console.log("StoreOrdersPage",store_id)
+  console.log("StoreOrdersPage", store_id);
   const { page, limit, setPage } = useOrderStore();
-  const { data, isLoading } = useOrders({ store_id, page, limit });
+  const { data, isLoading, refetch } = useOrders({ store_id, page, limit });
+  const queryClient = useQueryClient();
   const { mutate: deleteOrder } = useDeleteOrder();
   const { mutate: updateStatus } = useUpdateOrderStatus();
 
   const orders = data?.data || [];
   const totalPages = data?.pagination?.totalPages || 1;
-  const totalOrders = data?.data?.length|| 0;
+  const totalOrders = data?.data?.length || 0;
   // Filter orders based on search and status
   const filteredOrders = orders.filter((order: any) => {
-    const matchesSearch = 
+    const matchesSearch =
       order.order_id.toString().includes(searchTerm) ||
       order.customer_name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "ALL" || order.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "ALL" || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
+  useEffect(() => {
+    if (!store_id) return;
 
+    console.log("Joining room:", store_id);
+
+    socket.emit("join-store", store_id);
+
+    return () => {
+      socket.emit("leave-store", store_id);
+    };
+  }, [store_id]);
+  useEffect(() => {
+    const refreshOrders = async () => {
+      console.log("🔥 order-created received");
+
+      await refetch();
+    };
+
+    socket.on("order-created", refreshOrders);
+    socket.on("order-status-updated", refreshOrders);
+    socket.on("order-deleted", refreshOrders);
+
+    return () => {
+      socket.off("order-created", refreshOrders);
+      socket.off("order-status-updated", refreshOrders);
+      socket.off("order-deleted", refreshOrders);
+    };
+  }, [refetch]);
   const getStatusColor = (status: string) => {
-    switch(status) {
-      case "COMPLETED": return "bg-green-100 text-green-700";
-      case "PREPARING": return "bg-yellow-100 text-yellow-700";
-      case "PLACED": return "bg-blue-100 text-blue-700";
-      default: return "bg-gray-100 text-gray-700";
+    switch (status) {
+      case "COMPLETED":
+        return "bg-green-100 text-green-700";
+      case "PREPARING":
+        return "bg-yellow-100 text-yellow-700";
+      case "PLACED":
+        return "bg-blue-100 text-blue-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
   const getStatusIcon = (status: string) => {
-    switch(status) {
-      case "COMPLETED": return <CheckCircle className="w-3.5 h-3.5" />;
-      case "PREPARING": return <Clock className="w-3.5 h-3.5" />;
-      case "PLACED": return <Package className="w-3.5 h-3.5" />;
-      default: return null;
+    switch (status) {
+      case "COMPLETED":
+        return <CheckCircle className="w-3.5 h-3.5" />;
+      case "PREPARING":
+        return <Clock className="w-3.5 h-3.5" />;
+      case "PLACED":
+        return <Package className="w-3.5 h-3.5" />;
+      default:
+        return null;
     }
   };
 
@@ -92,7 +136,9 @@ console.log("StoreOrdersPage",store_id)
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
               </button>
               <div>
-                <h1 className="text-3xl font-bold text-slate-800">Store Orders</h1>
+                <h1 className="text-3xl font-bold text-slate-800">
+                  Store Orders
+                </h1>
                 <p className="text-slate-500 mt-1">Store ID: {store_id}</p>
               </div>
             </div>
@@ -106,7 +152,7 @@ console.log("StoreOrdersPage",store_id)
               All Stores
             </button>
             <button
-              onClick={() =>router.push(`/orders/${store_id}`)}
+              onClick={() => router.push(`/orders/${store_id}`)}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-white font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 hover:scale-105"
             >
               <Plus className="w-5 h-5" />
@@ -120,8 +166,12 @@ console.log("StoreOrdersPage",store_id)
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">Total Orders</p>
-                <p className="mt-1 text-2xl font-bold text-slate-800">{totalOrders}</p>
+                <p className="text-sm font-medium text-slate-500">
+                  Total Orders
+                </p>
+                <p className="mt-1 text-2xl font-bold text-slate-800">
+                  {totalOrders}
+                </p>
               </div>
               <div className="rounded-xl bg-blue-50 p-2.5">
                 <ShoppingBag className="w-5 h-5 text-blue-600" />
@@ -132,7 +182,9 @@ console.log("StoreOrdersPage",store_id)
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-500">Placed</p>
-                <p className="mt-1 text-2xl font-bold text-blue-600">{getStatusCount("PLACED")}</p>
+                <p className="mt-1 text-2xl font-bold text-blue-600">
+                  {getStatusCount("PLACED")}
+                </p>
               </div>
               <div className="rounded-xl bg-blue-50 p-2.5">
                 <Package className="w-5 h-5 text-blue-600" />
@@ -143,7 +195,9 @@ console.log("StoreOrdersPage",store_id)
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-500">Preparing</p>
-                <p className="mt-1 text-2xl font-bold text-yellow-600">{getStatusCount("PREPARING")}</p>
+                <p className="mt-1 text-2xl font-bold text-yellow-600">
+                  {getStatusCount("PREPARING")}
+                </p>
               </div>
               <div className="rounded-xl bg-yellow-50 p-2.5">
                 <Clock className="w-5 h-5 text-yellow-600" />
@@ -154,7 +208,9 @@ console.log("StoreOrdersPage",store_id)
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-500">Completed</p>
-                <p className="mt-1 text-2xl font-bold text-green-600">{getStatusCount("COMPLETED")}</p>
+                <p className="mt-1 text-2xl font-bold text-green-600">
+                  {getStatusCount("COMPLETED")}
+                </p>
               </div>
               <div className="rounded-xl bg-green-50 p-2.5">
                 <CheckCircle className="w-5 h-5 text-green-600" />
@@ -197,23 +253,42 @@ console.log("StoreOrdersPage",store_id)
             <table className="w-full">
               <thead className="bg-slate-50/80">
                 <tr>
-                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Order</th>
-                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Customer</th>
-                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Items</th>
-                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
-                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                  <th className="p-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Order
+                  </th>
+                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Items
+                  </th>
+                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="p-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="p-4 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order: any) => (
-                    <tr key={order.order_id} className="group hover:bg-slate-50/50 transition-colors">
+                    <tr
+                      key={order.order_id}
+                      className="group hover:bg-slate-50/50 transition-colors"
+                    >
                       <td className="p-4">
-                        <p className="font-medium text-slate-800">#{order.order_id}</p>
+                        <p className="font-medium text-slate-800">
+                          #{order.order_id}
+                        </p>
                       </td>
                       <td className="p-4">
-                        <p className="text-sm text-slate-600">{order.customer_name}</p>
+                        <p className="text-sm text-slate-600">
+                          {order.customer_name}
+                        </p>
                       </td>
                       <td className="p-4">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-sm">
@@ -222,13 +297,19 @@ console.log("StoreOrdersPage",store_id)
                         </span>
                       </td>
                       <td className="p-4">
-                        <p className="font-semibold text-slate-800">₹{order.total_amount}</p>
+                        <p className="font-semibold text-slate-800">
+                          ₹{order.total_amount}
+                        </p>
                       </td>
                       <td className="p-4">
                         <select
                           value={order.status}
                           onChange={(e) => {
-                            if (confirm(`Update order #${order.order_id} status to ${e.target.value}?`)) {
+                            if (
+                              confirm(
+                                `Update order #${order.order_id} status to ${e.target.value}?`,
+                              )
+                            ) {
                               updateStatus({
                                 store_id,
                                 order_id: order.order_id,
@@ -239,15 +320,34 @@ console.log("StoreOrdersPage",store_id)
                           className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border-0 cursor-pointer transition-colors ${getStatusColor(order.status)}`}
                         >
                           {getStatusIcon(order.status)}
-                          <option value="PLACED" className="bg-blue-100 text-blue-700">PLACED</option>
-                          <option value="PREPARING" className="bg-yellow-100 text-yellow-700">PREPARING</option>
-                          <option value="COMPLETED" className="bg-green-100 text-green-700">COMPLETED</option>
+                          <option
+                            value="PLACED"
+                            className="bg-blue-100 text-blue-700"
+                          >
+                            PLACED
+                          </option>
+                          <option
+                            value="PREPARING"
+                            className="bg-yellow-100 text-yellow-700"
+                          >
+                            PREPARING
+                          </option>
+                          <option
+                            value="COMPLETED"
+                            className="bg-green-100 text-green-700"
+                          >
+                            COMPLETED
+                          </option>
                         </select>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center justify-center gap-2">
                           <button
-                            onClick={() => router.push(`/orders/${store_id}/${order.order_id}`)}
+                            onClick={() =>
+                              router.push(
+                                `/orders/${store_id}/${order.order_id}`,
+                              )
+                            }
                             className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors group-hover:scale-105 transform duration-200"
                             title="View Order"
                           >
@@ -262,8 +362,15 @@ console.log("StoreOrdersPage",store_id)
                           </button> */}
                           <button
                             onClick={() => {
-                              if (confirm(`Are you sure you want to delete order #${order.order_id}?`)) {
-                                deleteOrder({ store_id, order_id: order.order_id });
+                              if (
+                                confirm(
+                                  `Are you sure you want to delete order #${order.order_id}?`,
+                                )
+                              ) {
+                                deleteOrder({
+                                  store_id,
+                                  order_id: order.order_id,
+                                });
                               }
                             }}
                             className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors group-hover:scale-105 transform duration-200"
@@ -280,13 +387,15 @@ console.log("StoreOrdersPage",store_id)
                     <td colSpan={6} className="p-12 text-center">
                       <div className="flex flex-col items-center gap-3">
                         <ShoppingBag className="w-12 h-12 text-slate-300" />
-                        <p className="text-slate-500 font-medium">No orders found</p>
-                        <p className="text-sm text-slate-400">
-                          {searchTerm || statusFilter !== "ALL" 
-                            ? 'Try adjusting your search or filters' 
-                            : 'Create your first order for this store'}
+                        <p className="text-slate-500 font-medium">
+                          No orders found
                         </p>
-                        {(searchTerm || statusFilter !== "ALL") ? (
+                        <p className="text-sm text-slate-400">
+                          {searchTerm || statusFilter !== "ALL"
+                            ? "Try adjusting your search or filters"
+                            : "Create your first order for this store"}
+                        </p>
+                        {searchTerm || statusFilter !== "ALL" ? (
                           <button
                             onClick={() => {
                               setSearchTerm("");

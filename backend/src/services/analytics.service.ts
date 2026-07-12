@@ -1,4 +1,12 @@
 const Order = require("../models/Order");
+const OrderArchive = require("../models/OrderArchive");
+
+
+interface GetOrdersParams {
+  store_id?: string;
+  page?: number;
+  limit?: number;
+}
 
 const getOrdersPerDay = async () => {
   return await Order.aggregate([
@@ -120,11 +128,124 @@ const getTopSellingItems = async () => {
     },
   ]);
 };
+const archiveOldOrders = async (days: number) => {
+  const cutoffDate = new Date();
 
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+
+  const oldOrders = await Order.find({
+    deleted: false,
+    created_at: {
+      $lt: cutoffDate,
+    },
+  });
+
+  if (oldOrders.length === 0) {
+    return {
+      archivedCount: 0,
+      message: "No old orders found.",
+    };
+  }
+
+  await OrderArchive.insertMany(
+    oldOrders.map((order: any) => ({
+      ...order.toObject(),
+      archived_at: new Date(),
+    })),
+  );
+
+  await Order.deleteMany({
+    _id: {
+      $in: oldOrders.map((order: any) => order._id),
+    },
+  });
+
+  return {
+    archivedCount: oldOrders.length,
+    message: `${oldOrders.length} orders archived successfully.`,
+  };
+};
+
+const getArchivedOrdersApi = async ({
+  store_id,
+  page = 1,
+  limit = 10,
+}: GetOrdersParams) => {
+  const filter: any = {};
+
+  if (store_id) {
+    filter.store_id = store_id;
+  }
+
+  const skip = (page - 1) * limit;
+
+  const [archivedOrders, totalRecords] = await Promise.all([
+    OrderArchive.aggregate([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: {
+          from: "stores",
+          localField: "store_id",
+          foreignField: "store_id",
+          as: "store",
+        },
+      },
+      {
+        $unwind: {
+          path: "$store",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          order_id: 1,
+          store_id: 1,
+          customer_name: 1,
+          total_items: 1,
+          total_amount: 1,
+          status: 1,
+          items: 1,
+          created_at: 1,
+          updated_at: 1,
+          archived_at: 1,
+          store_name: "$store.name",
+          store_address: "$store.address",
+        },
+      },
+      {
+        $sort: {
+          archived_at: -1,
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+    ]),
+
+    OrderArchive.countDocuments(filter),
+  ]);
+
+  return {
+    archivedOrders,
+    pagination: {
+      totalRecords,
+      totalPages: Math.ceil(totalRecords / limit),
+      currentPage: page,
+      limit,
+    },
+  };
+};
 module.exports = {
   getOrdersPerDay,
   getRevenuePerStore,
   getTopSellingItems,
+  archiveOldOrders,
+  getArchivedOrdersApi,
 };
 
 export {};

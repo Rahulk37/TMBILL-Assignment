@@ -51,9 +51,45 @@ const getTopSellingItems = async (
     next(error);
   }
 };
+const archiveOldOrders = async (req: Request, res: Response) => {
+  const days = Number(req.body.days ?? 30);
 
+  const result = await analyticsService.archiveOldOrders(days);
+
+  res.json({
+    success: true,
+    data: result,
+  });
+};
+
+const getArchivedOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { store_id, page = 1, limit = 10 } = req.query;
+
+    const result = await analyticsService.getArchivedOrdersApi({
+      store_id,
+      page: Number(page),
+      limit: Number(limit),
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Archived orders fetched successfully",
+      data: result.archivedOrders,   // ✅ Fix
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getOrdersPerDay,
   getRevenuePerStore,
   getTopSellingItems,
+  archiveOldOrders,
+  getArchivedOrders,
 };

@@ -1,3 +1,4 @@
+import { OrdersResponse } from "@/types/order";
 import api from "./api";
 
 export const getOrdersPerDay = async () => {
@@ -24,10 +25,29 @@ export const getTopItems = async () => {
   return response.data;
 };
 
-export const archiveOrders = async () => {
-  const response = await api.post(
-    "/archive-old-orders"
-  );
 
+export const archiveOrders = async (days: number) => {
+  return api.post("/analytics/archive-old-orders", {
+    days,
+  });
+};
+
+
+export const useArchiveOrdersApi = async ({
+  store_id,
+  page,
+  limit,
+}: {
+  store_id: string;
+  page: number;
+  limit: number;
+}): Promise<OrdersResponse> => {
+  const response = await api.get("/analytics", {
+    params: {
+      store_id,
+      page,
+      limit,
+    },
+  });
   return response.data;
 };

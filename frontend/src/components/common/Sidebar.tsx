@@ -38,11 +38,11 @@ export default function Sidebar() {
       href: "/analytics",
       icon: BarChart3,
     },
-    // {
-    //   name: "Archive",
-    //   href: "#",
-    //   icon: Archive,
-    // },
+    {
+      name: "Archive",
+      href: "/archive",
+      icon: Archive,
+    },
     // {
     //   name: "Notifications",
     //   href: "#",
