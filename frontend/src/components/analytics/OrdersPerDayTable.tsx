@@ -1,63 +1,87 @@
 "use client";
 
 import { useOrdersPerDay } from "@/hooks/useAnalytics";
+import { Calendar, Package } from "lucide-react";
 
 export default function OrdersPerDayTable() {
   const { data, isLoading, error } = useOrdersPerDay();
 
   if (isLoading) {
     return (
-      <div className="flex h-60 items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      <div className="rounded-2xl bg-white shadow-sm border border-slate-100 p-8">
+        <div className="flex h-60 items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            <p className="text-sm text-slate-500">Loading data...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-red-600">
-        Failed to load analytics.
+      <div className="rounded-2xl bg-white shadow-sm border border-red-200 p-8">
+        <div className="flex items-center justify-center text-red-600">
+          <div className="text-center">
+            <p className="font-semibold">Failed to load analytics</p>
+            <p className="text-sm mt-1">Please try again later</p>
+          </div>
+        </div>
       </div>
     );
   }
 
-  return (
-   <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="border-b p-6">
-        <h2 className="text-xl font-semibold text-slate-800">Orders Per Day</h2>
+  const tableData = data?.data || [];
 
-        <p className="mt-1 text-sm text-slate-500">Daily order statistics</p>
+  return (
+    <div className="rounded-2xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+      <div className="border-b border-slate-100 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-blue-600" />
+              Orders Per Day
+            </h2>
+            <p className="text-sm text-slate-500">Daily order statistics</p>
+          </div>
+          <span className="text-xs font-medium text-slate-400 bg-slate-50 px-3 py-1 rounded-full">
+            {tableData.length} days
+          </span>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="bg-slate-50">
+        <table className="w-full">
+          <thead className="bg-slate-50/80">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Date
               </th>
-
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+              <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Total Orders
               </th>
             </tr>
           </thead>
-
-          <tbody className="divide-y divide-gray-200">
-            {data?.data.length ? (
-              data.data.map(
+          <tbody className="divide-y divide-slate-100">
+            {tableData.length > 0 ? (
+              tableData.map(
                 (
-                  item: {
-                    date: string;
-                    totalOrders: number;
-                  },
+                  item: { date: string; totalOrders: number },
                   index: number,
                 ) => (
-                  <tr key={index} className="transition hover:bg-gray-50">
-                    <td className="px-6 py-4 text-gray-700">{item.date}</td>
-
+                  <tr key={index} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 text-sm text-slate-700">
+                      {new Date(item.date).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </td>
                     <td className="px-6 py-4">
-                      <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
+                        <Package className="w-3.5 h-3.5" />
                         {item.totalOrders}
                       </span>
                     </td>
@@ -66,8 +90,11 @@ export default function OrdersPerDayTable() {
               )
             ) : (
               <tr>
-                <td colSpan={2} className="py-10 text-center text-gray-500">
-                  No analytics data available.
+                <td colSpan={2} className="py-10 text-center text-slate-500">
+                  <div className="flex flex-col items-center gap-2">
+                    <Calendar className="w-8 h-8 text-slate-300" />
+                    <p>No analytics data available</p>
+                  </div>
                 </td>
               </tr>
             )}

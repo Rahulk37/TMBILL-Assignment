@@ -78,7 +78,52 @@ const getOrders = async ({
   const skip = (page - 1) * limit;
 
   const [orders, totalRecords] = await Promise.all([
-    Order.find(filter).sort({ created_at: -1 }).skip(skip).limit(limit),
+    Order.aggregate([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: {
+          from: "stores", // MongoDB collection name
+          localField: "store_id",
+          foreignField: "store_id",
+          as: "store",
+        },
+      },
+      {
+        $unwind: {
+          path: "$store",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          order_id: 1,
+          store_id: 1,
+          customer_name: 1,
+          total_items: 1,
+          total_amount: 1,
+          status: 1,
+          items: 1,
+          created_at: 1,
+          updated_at: 1,
+
+          store_name: "$store.name",
+          store_address: "$store.address",
+        },
+      },
+      {
+        $sort: {
+          created_at: -1,
+        },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+    ]),
 
     Order.countDocuments(filter),
   ]);

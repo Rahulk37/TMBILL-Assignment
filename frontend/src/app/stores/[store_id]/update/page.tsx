@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useStore, useUpdateStore } from "@/hooks/store/useCreateStore";
 
-
 export default function UpdateStorePage() {
   const router = useRouter();
 
@@ -12,11 +11,9 @@ export default function UpdateStorePage() {
     store_id: string;
   }>();
 
-  const { data, isLoading } =
-    useStore(store_id);
+  const { data, isLoading } = useStore(store_id);
 
-  const { mutate, isPending } =
-    useUpdateStore();
+  const { mutate, isPending } = useUpdateStore();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -32,18 +29,14 @@ export default function UpdateStorePage() {
     }
   }, [data]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit = (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     mutate(
@@ -59,35 +52,23 @@ export default function UpdateStorePage() {
         },
 
         onError: (error: any) => {
-          alert(
-            error.response?.data?.message ??
-              "Update failed"
-          );
+          alert(error.response?.data?.message ?? "Update failed");
         },
-      }
+      },
     );
   };
 
   if (isLoading) {
-    return (
-      <div className="p-8">
-        Loading...
-      </div>
-    );
+    return <div className="p-8">Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-slate-100 p-8">
       <div className="mx-auto max-w-2xl">
-
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">
-            Update Store
-          </h1>
+          <h1 className="text-3xl font-bold">Update Store</h1>
 
-          <p className="mt-2 text-slate-500">
-            Update store details.
-          </p>
+          <p className="mt-2 text-slate-500">Update store details.</p>
         </div>
 
         <form
@@ -95,11 +76,8 @@ export default function UpdateStorePage() {
           className="rounded-xl bg-white p-8 shadow"
         >
           <div className="space-y-6">
-
             <div>
-              <label className="mb-2 block font-medium">
-                Store Name
-              </label>
+              <label className="mb-2 block font-medium">Store Name</label>
 
               <input
                 name="name"
@@ -110,9 +88,7 @@ export default function UpdateStorePage() {
             </div>
 
             <div>
-              <label className="mb-2 block font-medium">
-                Address
-              </label>
+              <label className="mb-2 block font-medium">Address</label>
 
               <input
                 name="address"
@@ -123,7 +99,6 @@ export default function UpdateStorePage() {
             </div>
 
             <div className="flex justify-end gap-4">
-
               <button
                 type="button"
                 onClick={() => router.back()}
@@ -137,13 +112,9 @@ export default function UpdateStorePage() {
                 disabled={isPending}
                 className="rounded-lg bg-blue-600 px-6 py-3 text-white"
               >
-                {isPending
-                  ? "Updating..."
-                  : "Update Store"}
+                {isPending ? "Updating..." : "Update Store"}
               </button>
-
             </div>
-
           </div>
         </form>
       </div>

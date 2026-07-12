@@ -1,7 +1,4 @@
-export type OrderStatus =
-  | "PLACED"
-  | "PREPARING"
-  | "COMPLETED";
+export type OrderStatus = "PLACED" | "PREPARING" | "COMPLETED";
 
 export interface OrderItem {
   item_id: string;
@@ -9,16 +6,22 @@ export interface OrderItem {
 }
 
 export interface Order {
-  store_id: string;
+  _id: string;
   order_id: string;
+  store_id: string;
+  store_name: string;
+  store_address: string;
+
   customer_name: string;
+
+  items: OrderItem[];
   total_items: number;
   total_amount: number;
+
   status: OrderStatus;
-  items: {
-    item_id: string;
-    qty: number;
-  }[];
+
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CreateOrderPayload {
@@ -26,20 +29,15 @@ export interface CreateOrderPayload {
   order_id?: string;
   customer_name: string;
   total_amount: number;
-  items: {
-    item_id: string;
-    qty: number;
-  }[];
+  status: OrderStatus;
+  items: OrderItem[];
 }
 
 export interface UpdateOrderPayload {
   customer_name?: string;
   total_amount?: number;
   status?: OrderStatus;
-  items?: {
-    item_id: string;
-    qty: number;
-  }[];
+  items?: OrderItem[];
 }
 
 export interface Pagination {

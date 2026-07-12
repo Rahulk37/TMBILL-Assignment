@@ -33,6 +33,11 @@ const getOrdersPerDay = async () => {
 const getRevenuePerStore = async () => {
   return await Order.aggregate([
     {
+      $match: {
+        deleted: false,
+      },
+    },
+    {
       $group: {
         _id: "$store_id",
         totalRevenue: {
@@ -41,9 +46,25 @@ const getRevenuePerStore = async () => {
       },
     },
     {
+      $lookup: {
+        from: "stores",
+        localField: "_id",
+        foreignField: "store_id",
+        as: "store",
+      },
+    },
+    {
+      $unwind: {
+        path: "$store",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
       $project: {
         _id: 0,
         storeId: "$_id",
+        storeName: "$store.name",
+        storeAddress: "$store.address", // Optional
         totalRevenue: 1,
       },
     },

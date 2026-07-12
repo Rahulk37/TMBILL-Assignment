@@ -18,14 +18,18 @@ export interface UpdateStorePayload {
   address?: string;
 }
 
+export interface Pagination {
+  totalRecords: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
 export interface StoresResponse {
   success: boolean;
   message: string;
-  data: Store[];
-  pagination: {
-    totalRecords: number;
-    totalPages: number;
-    currentPage: number;
-    limit: number;
+  data: {
+    stores: Store[];
+    pagination: Pagination;
   };
 }
