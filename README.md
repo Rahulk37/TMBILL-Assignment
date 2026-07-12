@@ -523,18 +523,6 @@ Fields
 
 ---
 
-# Future Improvements
-
-- Authentication & Authorization
-- Role-based Access Control
-- Search & Sorting
-- Export Orders (CSV/PDF)
-- Email Notifications
-- Unit & Integration Tests
-- CI/CD Pipeline
-
----
-
 # Author
 
 **Rahul Kalashetti**
