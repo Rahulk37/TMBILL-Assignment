@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 const express = require("express");
 const cors = require("cors");
 
@@ -15,11 +17,17 @@ app.use(
 
 app.use(express.json());
 
+app.get("/", (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "Backend is running 🚀",
+  });
+});
+
 app.use("/api", routes);
 
 app.use(errorHandler);
 
 module.exports = app;
 
-// Make this file a TypeScript module
 export {};
