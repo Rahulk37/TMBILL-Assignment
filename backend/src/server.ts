@@ -4,11 +4,11 @@ const app = require("./app");
 const { env } = require("./config/env");
 const { connectDatabase } = require("./config/database");
 const { initializeSocket } = require("./config/socket");
-
+const { seedStores } = require("./utils/seed");
 const startServer = async () => {
   try {
     await connectDatabase();
-
+  await seedStores();
     const server = http.createServer(app);
 
     initializeSocket(server);

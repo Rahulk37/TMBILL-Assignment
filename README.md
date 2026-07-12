@@ -1,10 +1,52 @@
 # Multi-Store Order Management System
 
-## Overview
+A Full Stack Order Management System built as part of a **Full Stack Developer Assessment**.
 
-This project is a Full Stack Order Management System developed as part of a Full Stack Developer Assessment.
+The application enables multiple stores to manage customer orders, receive real-time updates, archive old orders, and visualize business analytics through an intuitive dashboard.
 
-The application allows multiple stores to manage orders, receive real-time updates, archive old orders, and view analytics.
+---
+
+# Features
+
+## Task 1 – Multi-Store Order Management
+
+- Create Orders
+- View Orders
+- Store-wise Order Filtering
+- Pagination
+- Update Order Status
+- Soft Delete Orders
+
+---
+
+## Task 2 – Real-Time Notification System
+
+Implemented using **Socket.IO**
+
+### Features
+
+- Real-time Order Creation
+- Real-time Order Status Updates
+- Store-based Socket Rooms
+- Automatic Reconnection
+- Live UI Refresh without page reload
+
+---
+
+## Task 3 – Data Archival & Analytics
+
+### Archive
+
+- Archive Orders older than N days (30 days by default)
+- View Archived Orders
+- Paginated Archived Orders
+
+### Analytics
+
+- Orders Per Day
+- Revenue Per Store
+- Top Selling Items
+- Store-wise Revenue
 
 ---
 
@@ -12,66 +54,38 @@ The application allows multiple stores to manage orders, receive real-time updat
 
 ## Frontend
 
-* Next.js
-* React
-* TypeScript
-* Zustand
-* React Query
-* Socket.IO Client
+- Next.js
+- React
+- TypeScript
+- Zustand
+- React Query (TanStack Query)
+- Socket.IO Client
+- Tailwind CSS
+- Recharts
+
+---
 
 ## Backend
 
-* Node.js
-* Express.js
-* TypeScript (CommonJS)
-* Socket.IO
-* Zod
+- Node.js
+- Express.js
+- TypeScript (CommonJS)
+- Socket.IO
+- Zod Validation
+
+---
 
 ## Database
 
-* MongoDB
-* Mongoose
+- MongoDB
+- Mongoose
+
+---
 
 ## DevOps
 
-* Docker
-* Docker Compose
-
----
-
-# Features
-
-## Task 1 - Multi Store Order Management
-
-* Create Order
-* Fetch Orders
-* Store-wise Filtering
-* Pagination
-* Update Order Status
-
----
-
-## Task 2 - Real-Time Notifications
-
-* Socket.IO Integration
-* Store-based Rooms
-* Live Order Creation
-* Live Status Updates
-* Automatic Reconnection
-
----
-
-## Task 3 - Data Archival & Analytics
-
-### Archive
-
-* Archive Orders older than 30 Days
-
-### Analytics
-
-* Orders Per Day
-* Revenue Per Store
-* Top 5 Selling Items
+- Docker
+- Docker Compose
 
 ---
 
@@ -98,18 +112,17 @@ multi-store-order-management
 backend
 │
 ├── src
-│
-├── config
-├── controllers
-├── middleware
-├── models
-├── routes
-├── services
-├── validators
-├── utils
-│
-├── app.ts
-└── server.ts
+│   ├── config
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── services
+│   ├── validators
+│   ├── utils
+│   │
+│   ├── app.ts
+│   └── server.ts
 ```
 
 ---
@@ -120,21 +133,31 @@ backend
 frontend
 │
 ├── src
-│
-├── app
-├── components
-├── hooks
-├── providers
-├── services
-├── store
-├── styles
-├── types
-└── utils
+│   ├── app
+│   ├── components
+│   ├── hooks
+│   ├── providers
+│   ├── services
+│   ├── store
+│   ├── styles
+│   ├── types
+│   └── utils
 ```
 
 ---
 
-# Installation
+# Prerequisites
+
+Install the following before running the project.
+
+- Node.js (18+)
+- npm
+- MongoDB
+- Docker & Docker Compose (Optional)
+
+---
+
+# Setup Instructions
 
 ## Clone Repository
 
@@ -146,7 +169,7 @@ cd multi-store-order-management
 
 ---
 
-## Backend
+# Backend Setup
 
 ```bash
 cd backend
@@ -156,7 +179,7 @@ npm install
 
 Create `.env`
 
-```
+```env
 PORT=5000
 
 MONGODB_URI=mongodb://localhost:27017/order_management
@@ -164,40 +187,62 @@ MONGODB_URI=mongodb://localhost:27017/order_management
 CLIENT_URL=http://localhost:3000
 ```
 
-Run
+Run Backend
 
 ```bash
 npm run dev
 ```
 
+Backend runs on
+
+```
+http://localhost:5000
+```
+
 ---
 
-## Frontend
+# Frontend Setup
 
 ```bash
 cd frontend
 
 npm install
-
-npm run dev
 ```
 
 Create `.env.local`
 
-```
+```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 
 NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
 ```
 
+Run Frontend
+
+```bash
+npm run dev
+```
+
+Frontend runs on
+
+```
+http://localhost:3000
+```
+
 ---
 
-# Docker
+# Docker Setup
 
-Run
+Build and start the application
 
 ```bash
 docker compose up --build
+```
+
+Stop Containers
+
+```bash
+docker compose down
 ```
 
 ---
@@ -208,28 +253,125 @@ docker compose up --build
 
 ### Create Order
 
+**POST**
+
 ```
-POST /api/orders
+/api/orders
 ```
+
+Request
+
+```json
+{
+  "store_id": "247543",
+  "customer_name": "Rahul",
+  "items": [
+    {
+      "item_id": "ITEM001",
+      "item_name": "Pizza",
+      "qty": 2
+    }
+  ],
+  "total_amount": 450
+}
+```
+
+---
 
 ### Get Orders
 
+**GET**
+
 ```
-GET /api/orders?store_id=STORE-1&page=1&limit=10
+/api/orders?store_id=247543&page=1&limit=10
 ```
+
+---
+
+### Get Order By ID
+
+**GET**
+
+```
+/api/orders/:store_id/:order_id
+```
+
+---
 
 ### Update Order Status
 
+**PATCH**
+
 ```
-PATCH /api/orders/:id/status
+/api/orders/:store_id/:order_id/status
+```
+
+Request
+
+```json
+{
+  "status": "COMPLETED"
+}
+```
+
+---
+
+### Delete Order
+
+**PATCH**
+
+```
+/api/orders/:store_id/:order_id/delete
+```
+
+---
+
+## Stores
+
+### Get Stores
+
+**GET**
+
+```
+/api/stores?page=1&limit=10
 ```
 
 ---
 
 ## Archive
 
+### Archive Old Orders
+
+**POST**
+
 ```
-POST /api/archive-old-orders
+/api/analytics/archive-old-orders
+```
+
+Request
+
+```json
+{
+  "days": 30
+}
+```
+
+---
+
+### Get Archived Orders
+
+**GET**
+
+```
+/api/analytics?page=1&limit=10
+```
+
+Optional Query Parameters
+
+```
+store_id
+page
+limit
 ```
 
 ---
@@ -238,41 +380,52 @@ POST /api/archive-old-orders
 
 ### Orders Per Day
 
-```
-GET /api/analytics/orders-per-day
-```
-
-### Revenue Per Store
+**GET**
 
 ```
-GET /api/analytics/revenue-per-store
-```
-
-### Top Selling Items
-
-```
-GET /api/analytics/top-items
+/api/analytics/orders-per-day
 ```
 
 ---
 
-# Socket Events
+### Revenue Per Store
+
+**GET**
+
+```
+/api/analytics/revenue-per-store
+```
+
+---
+
+### Top Selling Items
+
+**GET**
+
+```
+/api/analytics/top-items
+```
+
+---
+
+# Socket.IO Events
 
 ## Client Events
 
-```
-join-store
+| Event | Description |
+|--------|-------------|
+| join-store | Join a specific store room |
+| leave-store | Leave a specific store room |
 
-leave-store
-```
+---
 
 ## Server Events
 
-```
-order-created
-
-order-status-updated
-```
+| Event | Description |
+|--------|-------------|
+| order-created | Fired when a new order is created |
+| order-status-updated | Fired when an order status changes |
+| order-deleted | Fired when an order is deleted |
 
 ---
 
@@ -280,63 +433,105 @@ order-status-updated
 
 ## orders
 
-```
-store_id
+Fields
 
-items
-
-total_amount
-
-status
-
-created_at
-```
+- store_id
+- order_id
+- customer_name
+- items
+- total_items
+- total_amount
+- status
+- created_at
+- updated_at
 
 Indexes
 
-* store_id
-* created_at
+- store_id
+- created_at
 
 ---
 
-## orders_archive
+## orderarchives
 
-Stores archived orders older than 30 days.
+Stores archived orders.
+
+Fields
+
+- store_id
+- order_id
+- customer_name
+- items
+- total_items
+- total_amount
+- status
+- archived_at
+- created_at
+- updated_at
+
+---
+
+## stores
+
+Fields
+
+- store_id
+- name
+- address
 
 ---
 
 # Frontend Pages
 
-* Home
-* Create Order
-* Orders
-* Update Status
-* Analytics
+- Dashboard
+- Store Listing
+- Orders
+- Create Order
+- Order Details
+- Analytics Dashboard
+- Archived Orders
 
 ---
 
-# Scalability
+# Scalability & Performance
 
-* Pagination
-* MongoDB Indexes
-* React Query Cache
-* Zustand State Management
-* Store-based Socket Rooms
-* Efficient Aggregation Pipelines
+- MongoDB Indexing
+- Pagination
+- Store-wise Filtering
+- Aggregation Pipelines
+- React Query Caching
+- Zustand Global State
+- Socket.IO Room-based Communication
+- Soft Delete Strategy
+- Efficient Database Queries
 
 ---
 
 # Assumptions
 
-* Order status follows:
+- Order status values are:
 
-  * PLACED
-  * PREPARING
-  * COMPLETED
+  - PLACED
+  - PREPARING
+  - COMPLETED
 
-* Orders older than 30 days are archived manually using the archive API.
+- Orders can be archived based on configurable days (30 days by default).
 
-* MongoDB is used as the primary database.
+- MongoDB is used as the primary database.
+
+- Each Store has a unique `store_id`.
+
+---
+
+# Future Improvements
+
+- Authentication & Authorization
+- Role-based Access Control
+- Search & Sorting
+- Export Orders (CSV/PDF)
+- Email Notifications
+- Unit & Integration Tests
+- CI/CD Pipeline
 
 ---
 

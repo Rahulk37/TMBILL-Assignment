@@ -2,18 +2,23 @@
 
 import Pagination from "@/components/common/Pagination";
 import { Order } from "@/types/order";
-import { useOrders } from "@/hooks/useOrders";
+
 import useOrderStore from "@/store/order.store";
 import useSocket from "@/hooks/useSocket";
 import StoreFilter from "./StoreFilter";
 import Link from "next/link";
+import { useOrders } from "@/hooks/order/useOrder";
 
 export default function OrdersTable() {
   useSocket();
 
   const { selectedStore, page, limit } = useOrderStore();
 
-  const { data, isLoading, error } = useOrders(selectedStore, page, limit);
+  const { data, isLoading } = useOrders({
+    store_id: "",
+    page: 1,
+    limit,
+  });
 
   if (isLoading) {
     return (
@@ -23,13 +28,7 @@ export default function OrdersTable() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-red-600">
-        Something went wrong while loading orders.
-      </div>
-    );
-  }
+
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">

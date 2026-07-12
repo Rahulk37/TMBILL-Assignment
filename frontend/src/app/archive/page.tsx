@@ -11,7 +11,7 @@ import {
   ShoppingBag,
   Search,
   Eye,
-  Trash2,
+  TrendingUp,
   ChevronLeft,
   ChevronRight,
   Package,
@@ -126,7 +126,40 @@ export default function ArchiveOrdersPage() {
       </div>
     );
   }
-
+if (orders.length === 0) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/30 flex items-center justify-center p-8">
+      <div className="w-full max-w-lg rounded-2xl bg-white/80 backdrop-blur-sm p-12 text-center shadow-xl border border-white/20">
+        <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <Archive className="w-10 h-10 text-white" />
+        </div>
+        <h1 className="mb-3 text-3xl font-bold text-slate-800">No Archived Orders</h1>
+        <p className="mb-2 text-slate-600 text-lg">
+          Your archive is empty
+        </p>
+        <p className="mb-8 text-sm text-slate-500">
+          Orders that are archived will appear here. You can archive old orders from the analytics page or wait for automatic archiving.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={() => router.push("/analytics")}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 px-6 py-3 text-white font-semibold hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-200 hover:scale-105"
+          >
+            <TrendingUp className="w-5 h-5" />
+            Go to Analytics
+          </button>
+          <button
+            onClick={() => router.push("/orders")}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-6 py-3 text-slate-600 font-semibold hover:bg-slate-50 transition-all duration-200"
+          >
+            <ShoppingBag className="w-5 h-5" />
+            View Active Orders
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 p-8">
       <div className="mx-auto max-w-7xl">

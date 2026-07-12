@@ -13,13 +13,8 @@ export default function RootLayout({
       <body className="bg-slate-100">
         <QueryProvider>
           <div className="flex min-h-screen">
-            {/* Sidebar */}
             <Sidebar />
-
-            {/* Main Content */}
-            <main className="ml-64 flex-1 p-8">
-              {children}
-            </main>
+            <main className="ml-64 flex-1 p-8">{children}</main>
           </div>
         </QueryProvider>
       </body>

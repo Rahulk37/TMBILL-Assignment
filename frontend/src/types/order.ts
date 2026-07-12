@@ -27,11 +27,15 @@ export interface Order {
 
 export interface CreateOrderPayload {
   store_id: string;
-  order_id?: string;
   customer_name: string;
   total_amount: number;
-  status: OrderStatus;
-  items: OrderItem[];
+
+  items: {
+    item_id: string;
+    qty: number;
+  }[];
+
+  status?: string;
 }
 
 export interface UpdateOrderPayload {

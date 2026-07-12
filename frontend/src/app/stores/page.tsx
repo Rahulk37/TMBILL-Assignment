@@ -27,7 +27,7 @@ export default function StoresPage() {
   const { data, isLoading } = useStores(page, limit);
   const { mutate: deleteStore } = useDeleteStore();
 
-  const totalPages = Math.ceil((data?.data?.total || 0) / limit);
+  const totalPages = data?.data?.pagination?.totalPages ?? 1;
   const stores = data?.data?.stores || [];
 
    const { data: orderData } = useOrders({
@@ -116,7 +116,7 @@ export default function StoresPage() {
                 <p className="text-sm font-medium text-slate-500">
                   Total Orders
                 </p>
-                <p className="mt-2 text-3xl font-bold text-slate-800">{orderData?.data.length ?? 0}</p>
+                <p className="mt-2 text-3xl font-bold text-slate-800">{orderData?.data?.length ?? 0}</p>
               </div>
               <div className="rounded-xl bg-purple-50 p-3">
                 <Package className="w-6 h-6 text-purple-600" />

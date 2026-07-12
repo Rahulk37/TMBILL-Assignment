@@ -320,24 +320,9 @@ export default function StoreOrdersPage() {
                           className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border-0 cursor-pointer transition-colors ${getStatusColor(order.status)}`}
                         >
                           {getStatusIcon(order.status)}
-                          <option
-                            value="PLACED"
-                            className="bg-blue-100 text-blue-700"
-                          >
-                            PLACED
-                          </option>
-                          <option
-                            value="PREPARING"
-                            className="bg-yellow-100 text-yellow-700"
-                          >
-                            PREPARING
-                          </option>
-                          <option
-                            value="COMPLETED"
-                            className="bg-green-100 text-green-700"
-                          >
-                            COMPLETED
-                          </option>
+                          <option value="PLACED">PLACED</option>
+                          <option value="PREPARING">PREPARING</option>
+                          <option value="COMPLETED">COMPLETED</option>
                         </select>
                       </td>
                       <td className="p-4">

@@ -4,7 +4,6 @@ services:
   mongodb:
     image: mongo:8
     container_name: mongodb
-
     restart: unless-stopped
 
     ports:
@@ -18,7 +17,6 @@ services:
       context: ./backend
 
     container_name: backend
-
     restart: unless-stopped
 
     ports:
@@ -33,16 +31,15 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: "http://localhost:5000/api"
+        NEXT_PUBLIC_SOCKET_URL: "http://localhost:5000"
 
     container_name: frontend
-
     restart: unless-stopped
 
     ports:
       - "3000:3000"
-
-    env_file:
-      - ./frontend/.env.docker
 
     depends_on:
       - backend

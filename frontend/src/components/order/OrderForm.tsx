@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateOrder } from "@/hooks/useCreateOrder";
+
 import { useRouter } from "next/navigation";
+import { useCreateOrder } from "@/hooks/order/useOrder";
 export default function OrderForm() {
   const router = useRouter();
   const { mutate, isPending } = useCreateOrder();
 
   const [formData, setFormData] = useState({
     store_id: "",
+    customer_name: "",
     total_amount: "",
     items: [
       {
@@ -73,14 +75,15 @@ export default function OrderForm() {
   ) => {
     e.preventDefault();
 
-    const payload = {
-      store_id: formData.store_id.trim(),
-      total_amount: Number(formData.total_amount),
-      items: formData.items.map((item) => ({
-        item_id: item.item_id.trim(),
-        qty: Number(item.qty),
-      })),
-    };
+const payload = {
+  store_id: formData.store_id.trim(),
+  customer_name: formData.customer_name.trim(),
+  total_amount: Number(formData.total_amount),
+  items: formData.items.map((item) => ({
+    item_id: item.item_id.trim(),
+    qty: Number(item.qty),
+  })),
+};
 
     console.log(payload);
 
@@ -91,6 +94,7 @@ export default function OrderForm() {
         setFormData({
           store_id: "",
           total_amount: "",
+          customer_name: "",
           items: [
             {
               item_id: "",
@@ -285,6 +289,7 @@ return (
                     setFormData({
                       store_id: "",
                       total_amount: "",
+                      customer_name: "",
                       items: [
                         {
                           item_id: "",

@@ -1,12 +1,14 @@
-import { CreateStorePayload, StoresResponse, UpdateStorePayload } from "@/types/store";
+import {
+  CreateStorePayload,
+  StoresResponse,
+  UpdateStorePayload,
+} from "@/types/store";
 import api from "./api";
 
-
 // Create Store
-export const createStore = async (
-  data: CreateStorePayload
-) => {
-  console.log("CreateStorePayload",data)
+export const createStore = async (data: CreateStorePayload) => {
+  console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+  console.log("CreateStorePayload", data);
   const response = await api.post("/stores", data);
 
   return response.data;
@@ -31,12 +33,8 @@ export const getStores = async ({
 };
 
 // Get Single Store
-export const getStoreById = async (
-  store_id: string
-) => {
-  const response = await api.get(
-    `/stores/${store_id}`
-  );
+export const getStoreById = async (store_id: string) => {
+  const response = await api.get(`/stores/${store_id}`);
 
   return response.data;
 };
@@ -49,21 +47,14 @@ export const updateStore = async ({
   store_id: string;
   data: UpdateStorePayload;
 }) => {
-  const response = await api.patch(
-    `/stores/${store_id}`,
-    data
-  );
+  const response = await api.patch(`/stores/${store_id}`, data);
 
   return response.data;
 };
 
 // Delete Store
-export const deleteStore = async (
-  store_id: string
-) => {
-  const response = await api.patch(
-    `/stores/${store_id}/delete`
-  );
+export const deleteStore = async (store_id: string) => {
+  const response = await api.patch(`/stores/${store_id}/delete`);
 
   return response.data;
 };
